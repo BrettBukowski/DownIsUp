@@ -1,0 +1,36 @@
+body{
+  background: url(../images/bg.png);
+  font-size: 14px;
+  font-family: sans-serif;
+  text-align: center;
+  min-width: 800px;
+}
+h1{
+  color: #FFF;
+  font-family: 'Lato', arial, serif;
+  font-size: 60px;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, .2);
+}
+textarea{
+  background: -moz-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed));
+  font-size: 1.1em;
+  min-height: 400px;
+  padding: 6px;
+  resize: none;
+  width: 45%;
+}
+textarea:focus{
+  background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
+}
+label {
+  float: left;
+  padding-left: 4%;
+  text-align: left;
+  width: 45%;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+}
+textarea:first-child{
+  margin-right: 10px;
+}
