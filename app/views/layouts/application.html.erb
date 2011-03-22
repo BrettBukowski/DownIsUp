@@ -4,12 +4,40 @@
   <title>Downisup</title>
 	<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
   <%= stylesheet_link_tag :all %>
-  <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
 <body>
 
 <%= yield %>
 
+<%= javascript_include_tag 'prototype' %>
+<script type="text/javascript">
+	document.observe("dom:loaded", function() {
+		var frame = $('html').contentDocument;
+		frame.open(); frame.writeln("<div id='content'></div>"); frame.close();
+		var writeTo = frame.getElementById('content');
+		var md = $('markdown');
+		var text = "", converted = "";
+		$('markdown').observe('keydown', function(e){
+			if(e.keyCode === Event.KEY_TAB) {
+				Event.stop(e);
+				md.value += "  ";
+			}
+		});
+		setInterval(function(){
+			text = md.value;
+			if(text !== converted) {
+				new Ajax.Request("/convert/all", {
+					method: 'post',
+					parameters: {text: text},
+					onSuccess: function(transport) {
+						converted = text;
+						writeTo.innerHTML = transport.responseText;
+					}
+				});
+			}
+		}, 300);
+	});
+</script>
 </body>
 </html>
