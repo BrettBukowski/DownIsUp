@@ -15,25 +15,48 @@ h1{
   margin: 0 0 1em;
   text-shadow: 0 3px 6px rgba(255, 255, 255, .2);
 }
-textarea, iframe{
+#content{
+  height:600px;
+  position: relative;
+}
+.wrap{
   background: -moz-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed));
+  display: inline;
+  left: 30px;
+  min-height: 500px;
+  position: absolute;
+  right:51%;
+  top: 0;
+  -webkit-box-shadow:0 0 4px rgba(0, 0, 0, .5), 0 0 10px rgba(0, 0, 0, 0.12) inset, 0 0 4px rgba(0, 0, 0, .5), 0 0 10px rgba(0, 0, 0, 0.12) inset;
+}
+.wrap.right{
+  left:51%;
+  right:30px;
+}
+textarea, iframe{
+  background: none;
+  border: none;
+  position: absolute;
+  top:0px;
+  bottom: 0px;
+  right:0px;
+  left:0px;
+}
+textarea{
   font-size: 1.1em;
-  min-height: 400px;
+  outline: none;
   padding: 6px;
   resize: none;
-  width: 45%;
-  -webkit-box-shadow:0 0px 4px rgba(0, 0, 0, .5), rgba(0, 0, 0, 0.12) 0px 0px 10px inset
-  0 0px 4px rgba(0, 0, 0, .5), rgba(0, 0, 0, 0.12) 0px 0px 10px inset;
 }
-textarea:focus{
+iframe{
+  width: 99%;
+  height: 99%;
+}
+.wrap:focus,textarea:focus{
   background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
-}
-textarea:focus,
-textarea:active{
-/*  outline: none;*/
-  outline: none;
+/*  -webkit-box-shadow:3px 3px 14px rgba(0, 0, 0, .5) inset, 3px 3px 14px rgba(0, 0, 0, .5) inset;*/
 }
 label {
   float: left;
@@ -41,7 +64,4 @@ label {
   text-align: left;
   width: 45%;
   text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
-}
-textarea:first-child{
-  margin-right: 10px;
 }
