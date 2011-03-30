@@ -19,7 +19,6 @@
 		var writeTo = frame.getElementById('content'),
 				md = $('markdown'),
 				text = "", converted = "";
-		$('markdown').observe('keydown', checkTab);
 		setInterval(function(){
 			text = md.value;
 			if(text !== converted) {
@@ -33,29 +32,7 @@
 				});
 			}
 		}, 300);
-		$('copy').observe('click', copy);
-		function copy(inElement) {
-			inElement = $('markdown');
-		  if (inElement.createTextRange) {
-		    var range = inElement.createTextRange();
-		    if (range && BodyLoaded == 1) {
-		      range.execCommand('Copy');
-				}
-		  }
-			else {
-		    var flashID = 'ughFlash',
-						flash = document.getElementById(flashID);
-		    if(!flash) {
-		      var div = document.createElement('div');
-		      div.id = flashID;
-		      flash = document.body.appendChild(div);
-		    }
-				flash.innerHTML = '';
-				flash.innerHTML = '<embed src="_clipboard.swf" FlashVars="clipboard='+encodeURIComponent(inElement.value)+'" width="0" height="0" type="application/x-shockwave-flash"></embed>';
-		  }
-		}
-
-		function checkTab(evt) {
+		$('markdown').observe('keydown', function(evt) {
 			var tab = "  ",
 		  		t = evt.target,
 		    	ss = t.selectionStart,
@@ -107,7 +84,30 @@
 				Event.stop(evt);
         t.selectionStart = t.selectionEnd = ss + 2;
 	    }
-		}
+		});
+		(function(){
+			var async = document.createElement('script');
+			async.type = 'text/javascript';
+			async.async = true;
+			async.src = '/javascripts/zeroclipboard/ZeroClipboard.js';
+			async.onload = function(){
+				var setup = function(element) {
+					var clip = new ZeroClipboard.Client();
+					clip.addEventListener('mousedown', function() {
+						clip.setText(writeTo.innerHTML);
+					});
+					clip.addEventListener('complete', function(client, text) {
+						alert(text);
+					});
+					clip.glue(element);
+				};
+				ZeroClipboard.setMoviePath('/javascripts/zeroclipboard/ZeroClipboard10.swf');
+				setup('copy');
+				// ZeroClipboard.setMoviePath('/javascripts/zeroclipboard/ZeroClipboard.swf');
+				// setup('copySource');
+			};
+			document.body.appendChild(async);
+		})();
 	});
 </script>
 </body>
