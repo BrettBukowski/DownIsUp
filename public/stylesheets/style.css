@@ -1,19 +1,38 @@
 body{
   background: url(../images/bg.png);
-  -webkit-box-shadow: 0 5px 6px rgba(0, 0, 0, .4) inset;
   font-size: 14px;
   font-family: sans-serif;
   margin: 0;
-  padding: 1em 0;
-  text-align: center;
+  padding: 20px 0 0;
   min-width: 800px;
 }
 h1{
+  background:#E0E4D3;
+  border: 1px solid #FFF;
+  border-width: 1px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, .4);
+  -moz-box-shadow: 0 4px 8px rgba(0, 0, 0, .4);
+  -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, .4);
   color: #FFF;
-  font-family: 'Lato', arial, serif;
-  font-size: 60px;
+  font-family: 'Anton', arial, serif;
+  font-size: 67px;
+  line-height: 91px;
   margin: 0 0 1em;
-  text-shadow: 0 3px 6px rgba(255, 255, 255, .2);
+  padding-left: 30px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+  text-transform: uppercase;
+  -webkit-transition: text-shadow 1s linear;
+}
+h1:hover{
+  text-shadow: 0 -2px 4px rgba(0, 0, 0, 1) inset;
+}
+a{
+  border-bottom: 1px dashed #000;
+  color: #000;
+  text-decoration: none;
+}
+p{
+  line-height:25px;
 }
 ul{
   margin: 0;
@@ -96,7 +115,10 @@ iframe{
   text-shadow:0 1px 2px rgba(0, 0, 0, .8);
   top: -30px;
 }
-
+#siteinfo{
+  float: left;
+  width: 40%;
+}
 #todo {
   background-color:#FE6;
 	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#fe6), to(#f6ef97), color-stop(.6,#f5da41));
@@ -108,9 +130,9 @@ iframe{
   font-family:'Just Me Again Down Here';
   font-size:38px;
 	padding:20px;
-	margin:auto;
+  margin-left: 60%;
 	position:relative;
-	width:300px;
+	width:291px;
 }
 #todo:before {
 	content:'';
@@ -148,7 +170,7 @@ iframe{
 	opacity:1;
 	z-index:-1;
 }
-#todo h3:before {
+#todo h2:before {
 	content:'';
 	display:block;
 	width:200px;
@@ -165,7 +187,14 @@ iframe{
 	-moz-box-shadow:0 0 2px rgba(0,0,0,.15);
 	opacity:1;
 }
-#todo h3 {
+#todo h2 {
 	font-size:66px;
 	line-height:10px;
+}
+footer {
+  border: 1px solid #FFF;
+  border-width: 2px 0 0;
+  background:url(../images/lightbg.png);
+  padding: 40px 20px 90px;
+  text-shadow: 0 1px 0 #FFF;
 }
