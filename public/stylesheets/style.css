@@ -76,11 +76,25 @@ li{
   opacity:.9;
   padding: 6px 10px;
   position: absolute;
-  right: 0px;
   text-shadow:0 1px 0 #fff;
+}
+#expand {
+  left: 0px;
+}
+#copy {
+  right: 0px;
 }
 .wrap.right button.hover {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(47%,#efefef), color-stop(100%,#a0a0a0));
+}
+textarea{
+  font-size: 1.1em;
+  outline: none;
+  padding: 6px;
+  resize: none;
+  /* FF doesn't seem to allow absolute top/left/bottom/right settings on textareas, so these. :( */
+  height: 98.5%;
+  width: 98%;
 }
 textarea, iframe{
   background: none;
@@ -90,12 +104,6 @@ textarea, iframe{
   bottom: 0px;
   right:0px;
   left:0px;
-}
-textarea{
-  font-size: 1.1em;
-  outline: none;
-  padding: 6px;
-  resize: none;
 }
 iframe{
   width: 99%;
