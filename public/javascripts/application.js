@@ -128,6 +128,40 @@ var app = (function() {
         }).observe('mouseout', function() {
           new Effect.Opacity('expand', {from: 1, to: 0, duration: .5});
         });
+        var expanded = false, dialog, dialogCap, content,
+            toggleDialog = function() {
+              expanded = !expanded;
+              if(!dialog) {
+                dialog = $(document.createElement("div")).addClassName("dialog").setStyle({
+                  height: document.body.offsetHeight + "px"
+                });
+                content = $(document.createElement("div")).addClassName("content");
+                dialogCap = $(document.createElement("div")).addClassName("dialogCap");
+                var close = $(document.createElement("a").addClassName("close")).observe("click", function(e) {
+                  Event.stop(e);
+                  toggleDialog();
+                });
+                close.innerHTML = "close";
+                close.href = "#";
+                dialog.style.display = "none";
+                dialogCap.appendChild(close);
+                dialog.appendChild(dialogCap);
+                dialog.appendChild(content);
+                document.body.insertBefore(dialog, document.body.firstChild);
+              }
+              if(expanded) {
+                var iframe = document.createElement('iframe');
+                content.innerHTML = "";
+                content.appendChild(iframe);
+                iframe = iframe.contentDocument;
+                iframe.open(); iframe.writeln(writeTo.innerHTML); iframe.close();
+                dialog.appear({duration: .5});
+              }
+              else {
+                dialog.fade({duration: .5});
+              }
+          };
+        $('expand').observe('click', toggleDialog);
 			};
 	function constructor() {
 		startListening();
