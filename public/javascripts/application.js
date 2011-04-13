@@ -19,6 +19,10 @@ var app = (function() {
 								writeTo.innerHTML = transport.responseText;
 							}
 						});
+						if(converted === "") {
+						  // show buttons when first conversion occurs
+						  $('buttonPanel').appear({duration: 2});
+						}
 					}
 				}, 300);
 			},
@@ -97,11 +101,6 @@ var app = (function() {
 					clip.glue('copy');
 				};
 				document.body.appendChild(async);
-        $('html').observe('mouseover', function() {
-          new Effect.Opacity('copy', {from: 0, to: 1, duration: .5});
-        }).observe('mouseout', function() {
-          new Effect.Opacity('copy', {from: 1, to: 0, duration: .5});
-        });
 			},
 			showLabels = function() {
 				if('localStorage' in window){
@@ -123,44 +122,45 @@ var app = (function() {
 				}
 			},
 			handleHTMLPanelExpansion = function() {
-			  $('html').observe('mouseover', function() {
-          new Effect.Opacity('expand', {from: 0, to: 1, duration: .5});
-        }).observe('mouseout', function() {
-          new Effect.Opacity('expand', {from: 1, to: 0, duration: .5});
-        });
-        var expanded = false, dialog, dialogCap, content,
+        var expanded = false, dialog, content;
+            createDialog = function() {
+              var dialog = $(document.createElement("div")).addClassName("dialog").setStyle({
+                    height: document.body.offsetHeight + "px"
+                  }),
+                  dialogCap = $(document.createElement("div")).addClassName("dialogCap"),
+                  close = $(document.createElement("a").addClassName("close")).observe("click", function(e) {
+                    Event.stop(e);
+                    toggleDialog();
+                  });
+              content = $(document.createElement("div")).addClassName("content");
+              close.innerHTML = "close";
+              close.href = "#";
+              dialog.style.display = "none";
+              dialogCap.appendChild(close);
+              dialog.appendChild(dialogCap);
+              dialog.appendChild(content);
+              return document.body.insertBefore(dialog, document.body.firstChild);
+            },
+            createDialogContent = function() {
+              var iframe = document.createElement('iframe');
+              content.innerHTML = "";
+              content.appendChild(iframe);
+              iframe = iframe.contentDocument;
+              iframe.open(); iframe.writeln(writeTo.innerHTML); iframe.close();
+              dialog.appear({duration: .5});
+            },
             toggleDialog = function() {
               expanded = !expanded;
               if(!dialog) {
-                dialog = $(document.createElement("div")).addClassName("dialog").setStyle({
-                  height: document.body.offsetHeight + "px"
-                });
-                content = $(document.createElement("div")).addClassName("content");
-                dialogCap = $(document.createElement("div")).addClassName("dialogCap");
-                var close = $(document.createElement("a").addClassName("close")).observe("click", function(e) {
-                  Event.stop(e);
-                  toggleDialog();
-                });
-                close.innerHTML = "close";
-                close.href = "#";
-                dialog.style.display = "none";
-                dialogCap.appendChild(close);
-                dialog.appendChild(dialogCap);
-                dialog.appendChild(content);
-                document.body.insertBefore(dialog, document.body.firstChild);
+                dialog = createDialog();
               }
               if(expanded) {
-                var iframe = document.createElement('iframe');
-                content.innerHTML = "";
-                content.appendChild(iframe);
-                iframe = iframe.contentDocument;
-                iframe.open(); iframe.writeln(writeTo.innerHTML); iframe.close();
-                dialog.appear({duration: .5});
+                createDialogContent();
               }
               else {
                 dialog.fade({duration: .5});
               }
-          };
+            };
         $('expand').observe('click', toggleDialog);
 			};
 	function constructor() {

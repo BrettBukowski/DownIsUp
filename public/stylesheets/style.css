@@ -64,28 +64,25 @@ li{
   left:51%;
   right:30px;
 }
-.wrap.right button {
+#buttonPanel {
+  margin-right: -3px;
+}
+#buttonPanel button {
   background: -moz-linear-gradient(top, #fff 0%, #fff 47%, #aaa 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(47%,#fff), color-stop(100%,#aaa));
   border: 1px solid #777;
   border-right-color:#555;
   border-left-color:#555;
-  box-shadow: 0 3px 3px rgba(0, 0, 0, .4);
-  -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, .4);
-  -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, .4);
-  opacity:.9;
-  padding: 6px 10px;
-  position: absolute;
+  float: right;
+  padding: 3px 4px;
+  position: relative;
   text-shadow:0 1px 0 #fff;
+  top: -23px;
 }
-#expand {
-  left: 0px;
-}
-#copy {
-  right: 0px;
-}
-.wrap.right button.hover {
+button:hover,
+button.hover {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(47%,#efefef), color-stop(100%,#a0a0a0));
+  cursor: pointer;
 }
 textarea{
   font-size: 1.1em;
@@ -149,6 +146,13 @@ iframe{
   padding-left: 24px;
   line-height: 24px;
   text-decoration: none;
+}
+.dialog .content {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 35px;
 }
 #siteinfo{
   float: left;
