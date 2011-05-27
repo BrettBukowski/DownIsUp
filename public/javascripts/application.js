@@ -124,9 +124,7 @@ var app = (function() {
 			handleHTMLPanelExpansion = function() {
         var expanded = false, dialog, content;
             createDialog = function() {
-              var dialog = $(document.createElement("div")).addClassName("dialog").setStyle({
-                    height: document.body.offsetHeight + "px"
-                  }),
+              var dialog = $(document.createElement("div")).addClassName("dialog"),
                   dialogCap = $(document.createElement("div")).addClassName("dialogCap"),
                   close = $(document.createElement("a").addClassName("close")).observe("click", function(e) {
                     Event.stop(e);
@@ -146,8 +144,7 @@ var app = (function() {
               content.innerHTML = "";
               content.appendChild(iframe);
               iframe = iframe.contentDocument;
-              iframe.open(); iframe.writeln(writeTo.innerHTML); iframe.close();
-              dialog.appear({duration: .5});
+              (iframe.open(), iframe.writeln(writeTo.innerHTML), iframe.close());
             },
             toggleDialog = function() {
               expanded = !expanded;
@@ -157,9 +154,8 @@ var app = (function() {
               if(expanded) {
                 createDialogContent();
               }
-              else {
-                dialog.fade({duration: .5});
-              }
+              dialog.toggle('appear', {duration: 0.5});
+              $('pageContent').toggle();
             };
         $('expand').observe('click', toggleDialog);
 			};

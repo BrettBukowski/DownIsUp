@@ -10,9 +10,9 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-
-<%= yield %>
-
-<%= javascript_include_tag :defaults %>
+	<section id="pageContent">
+	<%= yield %>
+	</section>
+	<%= javascript_include_tag :defaults %>
 </body>
 </html>

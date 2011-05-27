@@ -6,6 +6,41 @@ body{
   padding: 20px 0 0;
   min-width: 800px;
 }
+
+/* Scrollbar for WebKit */
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+  html {
+    overflow-y: hidden;
+  }
+
+  body {
+    bottom: 0; 
+    left: 0; 
+    overflow-y: scroll;
+    position: absolute; 
+    right: 0;
+    top: 0;
+  }
+}
+::-webkit-scrollbar {
+  height: 6px; 
+  width: 6px;
+  z-index: 999;
+}
+::-webkit-scrollbar-thumb:horizontal,
+::-webkit-scrollbar-thumb:vertical {
+  background-color: rgba(255,255,255, 0.3);
+  height: 50px;
+  -webkit-border-radius: 3px;
+}
+::-webkit-scrollbar-track:enabled {
+  background-color: transparent;
+}
+::-webkit-scrollbar-track-piece {
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-border-radius: 3px;
+}
+
 h1{
   background:#E0E4D3;
   border: 1px solid #FFF;
@@ -133,39 +168,26 @@ iframe{
   content:"";
   height: 40px;
 }
-.dialog{
-  background: #F0F0F0;
-  height: 800px;
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  top: 0px;
-  z-index: 10;
-}
 .dialogCap{
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#777), color-stop(100%,#000));
-  height: 30px;
-  left: 0px;
+  padding: 4px 4px 0 0;
   position: absolute;
-  right: 0px;
-  top: 0px;
+  top: 0;
+  right: 0;
   z-index: 11;
 }
 .dialogCap .close {
   background: url(../images/close.png) no-repeat 0 2px;
-  color: #F2F2F2;
+  border: 0;
+  color: #CDCDCD;
   display: inline-block;
-  margin-left: 10px;
   padding-left: 24px;
   line-height: 24px;
   text-decoration: none;
 }
-.dialog .content {
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 35px;
+.dialog iframe {
+  background-color: #F0F0F0;
+  height: 99.5%;
+  width: 100%;
 }
 #siteinfo{
   float: left;
