@@ -6,7 +6,7 @@ Downisup::Application.configure do
 
   config.action_dispatch.x_sendfile_header = "X-Sendfile"
 
-  config.serve_static_assets = false
+  config.serve_static_assets = true
 
   config.assets.compress = true
   config.assets.compile = false
