@@ -1,0 +1,190 @@
+# /* global $,ZeroClipboard*/
+
+Event =
+  keys:
+    TAB: 9
+    RIGHT: 39
+    LEFT: 37
+    BACKSPACE: 8
+    DELETE: 46
+  kill: (e)->
+    e.preventDefault()
+    e.stopPropagation()
+
+Dialog =
+  expanded: false
+  dialog: null
+  template: "
+    <div class='dialog' style='display:none'>
+      <div class='dialogCap'>
+        <a class='close' href='#'>close</a>
+      </div>
+      <div class='content'></div>
+    </div>"
+
+  createDialog: ()->
+    template = $(@template)
+    close = template.find('.close').click (e)=>
+      Event.kill(e)
+      @toggle()
+
+    template.prependTo($(document.body))
+
+  createDialogContent: (content)->
+    iframe = document.createElement('iframe')
+    @dialog.find('.content').html('').append(iframe)
+    iframe = iframe.contentDocument
+    iframe.open()
+    iframe.writeln(content)
+    iframe.close()
+
+  toggle: (content)->
+    @expanded = !@expanded
+    @dialog || (@dialog = @createDialog())
+    @createDialogContent(content) if @expanded
+    @dialog.toggle(500)
+    $('#pageContent').toggle()
+
+Editor =
+  tabChar: "  "
+  tabSize: 2
+  keys:
+    tab: Event.keys.TAB
+    backspace: Event.keys.BACKSPACE
+    delete: Event.keys.DELETE
+    left: Event.keys.LEFT
+    right: Event.keys.RIGHT
+
+  handlesKey: (keycode, selectStart, selectEnd, value)->
+    for method, code of @keys
+      if code == keycode and @["#{method}Qualifier"](selectStart, selectEnd, value)
+        return method
+
+  tabQualifier: ()-> true
+  tab: (selectStart, selectEnd, value)->
+    if selectStart != selectEnd && value.slice(selectStart, selectEnd).indexOf("\n") != -1
+      # multi line selection
+      # In case selection was not of entire lines (e.g. selection begins in the middle of a line)
+      # tab at the beginning as well as at the start of every following line.
+      pre = value.slice(0, selectStart)
+      sel = value.slice(selectStart, selectEnd).replace(/\n/g,"\n" + @tabChar)
+      post = value.slice(selectEnd, value.length)
+      value = "#{pre}#{@tabChar}#{sel}#{post}"
+      selectStart = selectStart + @tabSize
+      selectEnd = selectEnd + @tabSize
+    else
+      # normal case
+      value = "#{value.slice(0, selectStart)}#{@tabChar}#{value.slice(selectStart, value.length)}"
+      if selectStart == selectEnd
+        selectStart = selectEnd = selectStart + @tabSize
+      else
+        selectStart = selectStart + @tabSize
+        selectEnd = selectEnd + @tabSize
+    [selectStart, selectEnd, value]
+
+  backspaceQualifier: (selectStart, selectEnd, value)-> value.slice(selectStart - @tabSize, selectStart) == @tabChar
+  backspace: (selectStart, selectEnd, value)->
+    # Backspace key - delete preceding tab expansion, if exists
+    [selectStart - @tabSize, selectStart - @tabSize, "#{value.slice(0, selectStart - @tabSize)}#{value.slice(selectStart, value.length)}"]
+
+  deleteQualifier: (selectStart, selectEnd, value)-> value.slice(selectEnd, selectEnd + @tabSize) == @tabChar
+  delete: (selectStart, selectEnd, value)->
+    # Delete key - delete following tab expansion, if exists
+    [selectStart, selectStart, "#{value.slice(0,selectStart)}#{value.slice(selectStart + @tabSize, value.length)}"]
+
+  leftQualifier: (selectStart, selectEnd, value) -> value.slice(selectStart - @tabSize, selectStart) == @tabChar
+  left: (selectStart, selectEnd, value)->
+    # Left/right arrow keys - move across the tab
+    [selectStart - @tabSize, selectStart - @tabSize, value]
+
+  rightQualifier: (selectStart, selectEnd, value)-> value.slice(selectStart, selectStart + @tabSize) == @tabChar
+  right: (selectStart, selectEnd, value)->
+    [selectStart + @tabSize, selectStart + @tabSize, value]
+
+class App
+  constructor: (el)->
+    @el = el
+    @converted = ""
+    @displayedControls = false
+
+    @startListening()
+    @initClickToCopy()
+    @showLabels()
+    @handleHTMLPanelExpansion()
+
+  startListening: ()->
+    frame = $('#html').prop('contentDocument')
+    text = ""
+
+    frame.open()
+    frame.writeln("<div id='content'></div>")
+    frame.close()
+
+    @node = frame.getElementById('content')
+
+    @el.keydown (e)=> @handleTabs(e)
+
+    setInterval ()=>
+      @convertContent()
+    , 300
+
+  convertContent: ()->
+    text = @el.val()
+
+    return if text == @converted
+
+    $.post '/convert/all',
+      { text: text },
+      (converted) =>
+        @converted = text
+        @node.innerHTML = converted
+
+    if not @displayedControls
+      # show buttons when first conversion occurs
+      @displayedControls = true
+      $('#buttonPanel').toggle(1000)
+
+  handleTabs: (evt)->
+    target = evt.target
+    selectStart = target.selectionStart
+    selectEnd = target.selectionEnd
+    editorHandler = Editor.handlesKey(evt.keyCode, selectStart, selectEnd, target.value)
+
+    if editorHandler
+      Event.kill(evt)
+      [selectStart, selectEnd, value] = Editor[editorHandler](selectStart, selectEnd, target.value)
+      target.value = value if value != target.value
+      target.selectionStart = selectStart if selectStart != target.selectionStart
+      target.selectionEnd = selectEnd if selectEnd != target.selectionEnd
+
+  initClickToCopy: ()->
+    ZeroClipboard.config moviePath: "<%= asset_path('zeroclipboard/ZeroClipboard.swf') %>"
+    client = new ZeroClipboard $('#copy')
+
+    client.on 'dataRequested', ()=>
+      client.setText(@node.innerHTML)
+
+    client.on 'complete', (client, result)->
+      return unless result.text
+
+      copyNotice = $('#copyNotice').toggle(500)
+      setTimeout ()->
+        copyNotice.toggle(500)
+      , 2000
+
+  showLabels: ()->
+    return if window.localStorage?.getItem('explained')
+
+    mdLabel = $('#markdownLabel').toggle(500)
+    htmlLabel = $('#htmlLabel').toggle(500)
+
+    @el.one 'click', ()->
+      mdLabel.toggle(500)
+      htmlLabel.toggle(500)
+
+    localStorage.setItem("explained", "true")
+
+  handleHTMLPanelExpansion: ()->
+    $('#expand').click ()=> Dialog.toggle(@node.innerHTML)
+
+$ -> new App $('#markdown').focus()
