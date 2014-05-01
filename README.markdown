@@ -1,6 +1,6 @@
 # What
 Minimal Rails app: input markdown > output html  
-Demo [Downisup](http://downisup.heroku.com/)
+Demo [Downisup](http://downisup.herokuapp.com/)
 
 # Built with
 *	[kramdown gem](http://kramdown.rubyforge.org/)
