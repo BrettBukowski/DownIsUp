@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.18'
+gem 'rails', '3.2.19'
 gem 'jquery-rails'
 gem 'coffee-rails'
 gem 'sass-rails'
